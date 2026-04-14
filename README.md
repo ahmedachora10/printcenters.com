@@ -1,6 +1,6 @@
 # Product Requirements Document — Alnaasik Print Center (v1.0 Complete)
 
-Full scope for a ground-up rebuild covering **32 modules**: core operations, POS, commissions, customers, B2B agents, loyalty, incentives, and full inventory management.
+Full scope for a ground-up rebuild covering **33 modules**: core operations, POS, commissions, customers, B2B agents, loyalty, incentives, and full inventory management.
 
 ---
 
@@ -8,7 +8,7 @@ Full scope for a ground-up rebuild covering **32 modules**: core operations, POS
 1. [Project Overview](#1-project-overview)
 2. [Goals & Success Metrics](#2-goals--success-metrics)
 3. [User Roles & Permissions](#3-user-roles--permissions)
-4. [Module Specifications M01–M32](#4-module-specifications)
+4. [Module Specifications M01–M33](#4-module-specifications)
 5. [Non-Functional Requirements](#5-non-functional-requirements)
 6. [Out of Scope](#6-out-of-scope)
 7. [Tech Stack](#7-tech-stack)
@@ -632,6 +632,70 @@ Full scope for a ground-up rebuild covering **32 modules**: core operations, POS
 
 ---
 
+### M30 — Internal Referral & Commission System
+
+**Description:** An internal order-routing system that lets any employee accept a client order outside their own service-category specialisation, post it to an internal board for a specialist to fulfil, and automatically split commissions between the referring and executing employees — keeping the client loyal to their original contact.
+
+**User Stories:**
+- As an employee, I can post an internal referral from any service invoice whose service category is outside my own specialisation.
+- As an employee, I can browse open internal referral orders for my service category and accept one.
+- As an executor, I can mark my accepted order as delivered and trigger automatic commission calculation for both myself and the referrer.
+- As a BranchAdmin, I can configure each employee's referral commission % and view referral commissions in the commission report.
+
+**Acceptance Criteria:**
+
+#### Referral Commission Rate
+- [ ] `referral_commission_pct DECIMAL(5,2) DEFAULT 0.00` added to `users` table.
+- [ ] BranchAdmin can set this value on the employee edit form (M04 area).
+
+#### DB: `internal_referral_orders`
+- [ ] Columns: `id`, `invoice_id` (FK → service_invoices), `referrer_id` (FK → users), `executor_id` (FK → users, nullable), `service_category_id` (FK → catalog_categories), `description` (TEXT, nullable), `status` ENUM(`open`,`accepted`,`delivered`,`cancelled`), `posted_at`, `accepted_at` (nullable), `delivered_at` (nullable), `cancellation_reason` (nullable), timestamps.
+- [ ] `commission_ledger` gets two new columns: `source_type` ENUM(`standard`,`referral_referrer`,`referral_executor`) DEFAULT `standard`; `referral_order_id` FK nullable → `internal_referral_orders`.
+
+#### Post Referral (from M11 invoice)
+- [ ] "Post Internally" button appears on a saved service invoice when the invoice's service category ≠ the creating employee's own category.
+- [ ] Modal: auto-fills invoice reference; employee selects target `service_category_id` and adds optional notes. Creates `internal_referral_orders` with `status = 'open'`.
+- [ ] M21 notification sent to all branch employees who have at least one service assigned in the target category.
+
+#### Internal Order Board (`/internal-orders`)
+- [ ] Tabs: **Open** | **My Accepted** | **Posted by Me**. Scoped to branch.
+- [ ] Card shows: service category, order value, referrer name, posted time, description. Client name is masked (first name only).
+- [ ] **Accept** button restricted to employees who have a service in the target category. Acceptance sets `executor_id`, `status = 'accepted'`, `accepted_at`; atomic DB transaction prevents double-accept; referrer receives M21 notification.
+- [ ] **Cancel** (referrer only, `status = 'open'` only): cancellation reason required; blocked once accepted.
+
+#### Delivery & Commission Calculation (`/internal-orders/:id`)
+- [ ] Executor sees order detail + "Mark as Delivered" button.
+- [ ] On delivery — single DB transaction:
+  1. Set `status = 'delivered'`, `delivered_at = now()`.
+  2. Calculate from linked invoice: `pre_tax_base = invoice.total_amount − invoice.vat_amount`.
+     - `referrer_commission = pre_tax_base × referrer.referral_commission_pct / 100`
+     - `executor_commission = pre_tax_base × (1 − referral_commission_pct/100) × executor_commission_pct / 100`
+  3. Insert two `commission_ledger` rows (`source_type = 'referral_referrer'` and `'referral_executor'`). Both immutable after insert.
+  4. Fire M21 notification to referrer with commission amount earned.
+- [ ] Any failure rolls back the entire transaction.
+
+#### Commission Formula
+```
+Net = (Invoice − Tax) × (1 − Referrer%) × (1 − Executor%) + Tax
+Referrer commission = pre_tax_base × Referrer%
+Executor commission = pre_tax_base × (1 − Referrer%) × Executor%
+```
+
+#### M21 Notification Events
+
+| Event | Recipient | Message |
+|-------|-----------|----------|
+| Order posted | All employees with matching category | "New internal referral in [category] — [amount] SAR" |
+| Order accepted | Referrer | "[Name] accepted your referral — Invoice #[N]" |
+| Order delivered | Referrer | "Referral #[N] delivered — your commission: [amount] SAR" |
+| Order cancelled | Executor (if previously accepted) | "Referral order #[N] has been cancelled" |
+
+#### Reports
+- [ ] M18 commission report: new **Referral** sub-tab filtering `source_type IN ('referral_referrer', 'referral_executor')`. Columns: Employee, Invoice #, Role (Referrer/Executor), Pre-tax Base, Rate %, Commission Amount, Delivered Date.
+- [ ] Employee dashboard: "My Referral Orders" widget — open/accepted/delivered counts and total pending commission.
+
+---
+
 ## 5. Non-Functional Requirements
 
 ### 5.1 Performance
@@ -822,3 +886,51 @@ stock_reconciliation_lines (reconciliation_id, product_id, system_qty, physical_
 | 8 | **User manual** | Arabic PDF per role (optional add-on) |
 
 ---
+
+## 10. Timeline & Pricing
+
+### Module Build Estimate (Solo Full-Time Developer)
+
+| Group | Modules | Working Days |
+|-------|---------|-------------|
+| Foundation + Schema + Auth | M01–M02 + migrations | 21 |
+| Core configuration | M03–M10 | 22 |
+| POS & Invoicing | M11–M14 | 22 |
+| Commission + Expense + Reports | M15–M18, M24 | 20 |
+| Catalogue + Notifications | M19–M21 | 12 |
+| Analytics | M25 | 5 |
+| Customer System + CRM | M22–M23 | 14 |
+| Agent System | M26 | 8 |
+| Incentives & Rewards | M27 | 6 |
+| Loyalty System | M28 | 8 |
+| Inventory & Warehouse | M29 | 14 |
+| Internal Referral System | M30 | 10 |
+| Data migration scripts | — | 8 |
+| Testing + QA | — | 10 |
+| Deployment + handover | — | 5 |
+| **Subtotal** | | **185 days** |
+| **+ 20% risk buffer** | | **+37 days** |
+| **Total** | | **~222 days** |
+
+**Calendar time (solo, full-time, 8 hrs/day, 5 days/week): ~45 weeks / ~11 months**
+
+### Pricing Reference
+
+| Market | Quote Range |
+|--------|------------|
+| Saudi local (budget SME) | SAR 90,000 – SAR 120,000 |
+| Saudi corporate | SAR 140,000 – SAR 180,000 |
+| International (Upwork / direct) | $38,000 – $65,000 |
+
+### Milestone Payment Structure
+
+| Milestone | % | When |
+|-----------|---|------|
+| Contract signing | 25% | Before work starts |
+| Phase 3 complete (POS + commissions live on staging) | 25% | Core financial system delivery |
+| Phase 7 complete (all 33 modules on staging) | 25% | Full feature delivery |
+| Go-live + data migration verified | 25% | Production acceptance |
+
+---
+
+*Document version: 1.0 — April 2026. All scope changes after sign-off require a written change order with corresponding timeline and price adjustment.*
