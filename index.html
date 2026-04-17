@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>خطة تسليم 33 وحدة في 3 أشهر — مركز الناسخ للطباعة</title>
+
+  <style>
+    body {
+      width: 650px;
+      margin: auto;
+      font-family: system-ui
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0)
+    }
+
+    .phase-wrap {
+      margin-bottom: 20px;
+      border: 0.5px solid rgb(230 230 242);
+      border-radius: 5px;
+      overflow: hidden;
+      background: ghostwhite
+    }
+
+    .ph-head {
+      padding: 16px 20px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 0.5px solid rgb(230 230 242)
+    }
+
+    .ph-title {
+      font-size: 14px;
+      font-weight: 500
+    }
+
+    .ph-sub {
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      margin-top: 2px
+    }
+
+    .ph-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap
+    }
+
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-bottom: 0.5px solid rgb(230 230 242)
+    }
+
+    .week-col {
+      padding: 10px 12px;
+      border-right: 0.5px solid rgb(230 230 242)
+    }
+
+    .week-col:last-child {
+      border-right: none
+    }
+
+    .wk-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      margin-bottom: 7px;
+      letter-spacing: 0.04em
+    }
+
+    .mod-chip {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      line-height: 1.4
+    }
+
+    .mod-id {
+      font-weight: 500;
+      min-width: 26px;
+      display: inline-block
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-bottom: 0.5px solid rgb(230 230 242)
+    }
+
+    .stat-cell {
+      padding: 10px 14px;
+      border-right: 0.5px solid rgb(230 230 242);
+      text-align: center
+    }
+
+    .stat-cell:last-child {
+      border-right: none
+    }
+
+    .stat-num {
+      font-size: 18px;
+      font-weight: 500
+    }
+
+    .stat-lbl {
+      font-size: 10px;
+      color: var(--color-text-secondary);
+      margin-top: 2px
+    }
+
+    .milestones {
+      padding: 12px 16px
+    }
+
+    .ms-title {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      letter-spacing: 0.04em;
+      margin-bottom: 8px
+    }
+
+    .ms-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      font-size: 11px;
+      border-bottom: 0.5px solid rgb(230 230 242)
+    }
+
+    .ms-row:last-child {
+      border-bottom: none
+    }
+
+    .ms-pct {
+      font-weight: 500;
+      min-width: 30px
+    }
+
+    .ms-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    .summary-bar {
+      height: 8px;
+      border-radius: 4px;
+      display: flex;
+      gap: 2px;
+      margin: 16px 0 8px;
+      overflow: hidden
+    }
+
+    .bar-seg {
+      height: 100%
+    }
+
+    .legend-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 6px 0 0
+    }
+
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--color-text-secondary)
+    }
+
+    .leg-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0
+    }
+
+    .b1-chip {
+      background: #E6F1FB;
+      color: #185FA5
+    }
+
+    .b2-chip {
+      background: #E1F5EE;
+      color: #0F6E56
+    }
+
+    .b3-chip {
+      background: #FAEEDA;
+      color: #854F0B
+    }
+
+    .b1-badge {
+      background: #E6F1FB;
+      color: #185FA5
+    }
+
+    .b2-badge {
+      background: #E1F5EE;
+      color: #0F6E56
+    }
+
+    .b3-badge {
+      background: #FAEEDA;
+      color: #854F0B
+    }
+
+    .b1-ms {
+      color: #185FA5
+    }
+
+    .b2-ms {
+      color: #0F6E56
+    }
+
+    .b3-ms {
+      color: #854F0B
+    }
+
+    .b1-dot {
+      background: #378ADD
+    }
+
+    .b2-dot {
+      background: #1D9E75
+    }
+
+    .b3-dot {
+      background: #BA7517
+    }
+
+    @media(prefers-color-scheme:dark) {
+      .b1-chip {
+        background: #0C447C;
+        color: #B5D4F4
+      }
+
+      .b2-chip {
+        background: #085041;
+        color: #9FE1CB
+      }
+
+      .b3-chip {
+        background: #633806;
+        color: #FAC775
+      }
+
+      .b1-badge {
+        background: #0C447C;
+        color: #B5D4F4
+      }
+
+      .b2-badge {
+        background: #085041;
+        color: #9FE1CB
+      }
+
+      .b3-badge {
+        background: #633806;
+        color: #FAC775
+      }
+    }
+
+    .note-box {
+      background: var(--color-background-secondary);
+      border-radius: var(--border-radius-md);
+      padding: 10px 14px;
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+      direction: rtl;
+      text-align: right;
+      margin-top: 16px
+    }
+
+    .header-card {
+      background: ghostwhite;
+      border: 0.5px solid rgb(230 230 242);
+      border-radius: 5px;
+      padding: 16px 20px;
+      margin-bottom: 16px
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2 class="sr-only">خطة تسليم 33 وحدة في 3 أشهر — مركز الناسخ للطباعة</h2>
+
+  <div class="header-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div>
+        <div style="font-size:14px;font-weight:500">مركز الناسخ — خطة التسليم </div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">33 وحدة · 3 أشهر · 12 أسبوع · يوم
+          عمل
+          = 8 ساعات</div>
+      </div>
+      <div style="text-align:left;font-size:11px;color:var(--color-text-secondary)">~65 يوم عمل فعلي</div>
+    </div>
+    <div class="summary-bar">
+      <div class="bar-seg" style="width:36%;background:#378ADD"></div>
+      <div class="bar-seg" style="width:33%;background:#1D9E75"></div>
+      <div class="bar-seg" style="width:31%;background:#BA7517"></div>
+    </div>
+    <div class="legend-row" style="padding:6px 0 0">
+      <div class="leg-item">
+        <div class="leg-dot" style="background:#378ADD"></div>الشهر الأول — البنية + POS (19 وحدة)
+      </div>
+      <div class="leg-item">
+        <div class="leg-dot" style="background:#1D9E75"></div>الشهر الثاني — العملاء + الكتالوج (7 وحدات)
+      </div>
+      <div class="leg-item">
+        <div class="leg-dot" style="background:#BA7517"></div>الشهر الثالث — المتقدم + الإطلاق (7 وحدات)
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTH 1 -->
+  <div class="phase-wrap">
+    <div class="ph-head">
+      <div>
+        <div class="ph-title">الشهر الأول — البنية الأساسية ونقطة البيع</div>
+        <div class="ph-sub">M01 → M19 · الإعداد، POS، العمولات، التقارير، سجل الدفعات</div>
+      </div>
+      <span class="ph-badge b1-badge">أسابيع 1–4 · 19 وحدة</span>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-num" style="color:#378ADD">19</div>
+        <div class="stat-lbl">وحدة</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">4</div>
+        <div class="stat-lbl">أسابيع</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">~23</div>
+        <div class="stat-lbl">يوم عمل</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">~6</div>
+        <div class="stat-lbl">وحدة/أسبوع</div>
+      </div>
+    </div>
+
+    <div class="week-grid">
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 1</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M01</span>المصادقة</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M02</span>الفروع</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M03</span>المدن</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M04</span>المستخدمون</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M05</span>قوالب الخدمات</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M06</span>الإعدادات</div>
+      </div>
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 2</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M07</span>خدمات الفرع</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M08</span>تصنيفات المنتجات</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M09</span>تصنيفات المصروفات</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M10</span>الكوبونات</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M11</span>POS الخدمات</div>
+      </div>
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 3</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M12</span>POS المنتجات</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M13</span>إدارة الفواتير</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M14</span>المرتجعات</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M15</span>العمولات</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M16</span>المصروفات</div>
+      </div>
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 4</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M17</span>تقرير المبيعات</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M18</span>تقرير العمولات</div>
+        <div class="mod-chip b1-chip"><span class="mod-id">M24</span>سجل الدفعات</div>
+        <div style="margin-top:6px;font-size:10px;color:var(--color-text-secondary)">اختبار + مراجعة MVP</div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- MONTH 2 -->
+  <div class="phase-wrap">
+    <div class="ph-head">
+      <div>
+        <div class="ph-title">الشهر الثاني — العملاء، الكتالوج، الإشعارات، التحليلات</div>
+        <div class="ph-sub">M19 → M23، M25 · واجهة العملاء + CRM + التحليلات المتقدمة</div>
+      </div>
+      <span class="ph-badge b2-badge">أسابيع 5–8 · 6 وحدات</span>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-num" style="color:#1D9E75">6</div>
+        <div class="stat-lbl">وحدة</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">4</div>
+        <div class="stat-lbl">أسابيع</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">~21</div>
+        <div class="stat-lbl">يوم عمل</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">~2</div>
+        <div class="stat-lbl">وحدة/أسبوع</div>
+      </div>
+    </div>
+
+    <div class="week-grid">
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 5</div>
+        <div class="mod-chip b2-chip"><span class="mod-id">M19</span>كتالوج عام</div>
+        <div class="mod-chip b2-chip"><span class="mod-id">M20</span>إدارة الكتالوج</div>
+      </div>
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 6</div>
+        <div class="mod-chip b2-chip"><span class="mod-id">M21</span>الإشعارات</div>
+        <div class="mod-chip b2-chip"><span class="mod-id">M22</span>نظام العملاء</div>
+      </div>
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 7</div>
+        <div class="mod-chip b2-chip"><span class="mod-id">M23</span>CRM والتحليلات</div>
+        <div class="mod-chip b2-chip"><span class="mod-id">M25</span>تحليلات متقدمة</div>
+      </div>
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 8</div>
+        <div style="font-size:10px;color:var(--color-text-secondary);line-height:1.6">
+          تكامل + اختبار شامل لـ 25 وحدة<br>إصلاح الملاحظات<br>مراجعة UX<br>تقرير جودة
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTH 3 -->
+  <div class="phase-wrap">
+    <div class="ph-head">
+      <div>
+        <div class="ph-title">الشهر الثالث — المتقدم، المخزون، الإطلاق</div>
+        <div class="ph-sub">M26 → M30 · الوكلاء، الولاء، الحوافز، المخزون، الإحالة + ترحيل البيانات والإطلاق</div>
+      </div>
+      <span class="ph-badge b3-badge">أسابيع 9–12 · 8 وحدات</span>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-num" style="color:#BA7517">8</div>
+        <div class="stat-lbl">وحدة</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">4</div>
+        <div class="stat-lbl">أسابيع</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">~21</div>
+        <div class="stat-lbl">يوم عمل</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">~2</div>
+        <div class="stat-lbl">وحدة/أسبوع</div>
+      </div>
+    </div>
+
+    <div class="week-grid">
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 9</div>
+        <div class="mod-chip b3-chip"><span class="mod-id">M26</span>نظام المندوبين</div>
+        <div class="mod-chip b3-chip"><span class="mod-id">M27</span>الحوافز والمكافآت</div>
+      </div>
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 10</div>
+        <div class="mod-chip b3-chip"><span class="mod-id">M28</span>نظام الولاء</div>
+        <div class="mod-chip b3-chip"><span class="mod-id">M29</span>المشتريات والمخازن</div>
+      </div>
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 11</div>
+        <div class="mod-chip b3-chip"><span class="mod-id">M30</span>الإحالة الداخلية</div>
+        <div style="margin-top:6px;font-size:10px;color:var(--color-text-secondary);line-height:1.6">
+          سكريبتات ترحيل البيانات<br>اختبار Pest الشامل
+        </div>
+      </div>
+      <div class="week-col">
+        <div class="wk-label">الأسبوع 12</div>
+        <div style="font-size:10px;color:var(--color-text-secondary);line-height:1.6">
+          نشر الإنتاج<br>ترحيل البيانات الفعلي<br>تدريب الفريق<br>قبول العميل النهائي
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>
